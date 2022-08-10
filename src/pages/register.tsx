@@ -3,25 +3,26 @@ import { Formik } from 'formik';
 import React from 'react';
 import { InputField } from '../components/InputField';
 import { Wrapper } from '../components/Wrapper';
+import { useRegisterMutation } from '../generated/graphql';
 
 interface registerProps {
 
 }
 
 const Register: React.FC<registerProps> = ({}) => {
+    const [, register] = useRegisterMutation();
+
         return (
             <Wrapper variant='small'>
                 <Text mb={8} textAlign="center" fontSize='20px' color='tomato'>
                    Login Your Account
                 </Text>
                <Formik
-                initialValues={{ name: '', password: '' }}
-                onSubmit={(values, { setSubmitting }) => {
-                setTimeout(() => {
-                    alert(JSON.stringify(values, null, 2));
-                    setSubmitting(false);
-                }, 400);
-                }}
+                initialValues={{ username: "", password: "" }}
+                onSubmit= { async (values) => {
+                   const response = await register(values)
+                  }
+                }
             >
                 {({
                 values,
@@ -35,7 +36,7 @@ const Register: React.FC<registerProps> = ({}) => {
                 }) => (
                 <form onSubmit={handleSubmit}>
                     <InputField
-                     name='name'
+                     name='username'
                      placeholder='username'
                      label='Enter Your First Name:'
                      type='text'
