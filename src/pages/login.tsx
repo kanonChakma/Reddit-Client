@@ -4,29 +4,25 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { InputField } from '../components/InputField';
 import { Wrapper } from '../components/Wrapper';
-import { useRegisterMutation } from '../generated/graphql';
+import { useLoginMutation } from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
 
-interface registerProps {
-
-}
-
-const Register: React.FC<registerProps> = ({}) => {
-    const [, register] = useRegisterMutation();
+const Login: React.FC<{}> = ({}) => {
+    const [, login] = useLoginMutation();
     const router =  useRouter();
         return (
             <Wrapper variant='small'>
                 <Text mb={8} textAlign="center" fontSize='20px' color='tomato'>
-                   Register Your Account
+                   Login Your Account
                 </Text>
                <Formik
                 initialValues={{ username: "", password: "" }}
                 onSubmit= { async (values, { setErrors}) => {
-                   const response = await register(values)
-                  if(response.data?.register.error){
-                      setErrors(toErrorMap(response.data.register.error))
+                   const response = await login({options:values})
+                  if(response.data?.login.error){
+                      setErrors(toErrorMap(response.data.login.error))
                     }
-                   else if(response.data?.register.user){
+                   else if(response.data?.login.user){
                     router.push("/");
                     }   
                   }
@@ -74,4 +70,4 @@ const Register: React.FC<registerProps> = ({}) => {
         );
 }
 
-export default Register;
+export default Login;
