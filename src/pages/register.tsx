@@ -33,11 +33,6 @@ const Register: React.FC<registerProps> = ({}) => {
                 }
             >
                 {({
-                values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
                 handleSubmit,
                 isSubmitting,
                 /* and other goodies */
