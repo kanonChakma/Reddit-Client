@@ -1,12 +1,11 @@
-import { Container } from '../components/Container';
-
+import { Box } from "@chakra-ui/react";
+import { NavBar } from "../components/NavBar";
 
 const Index = () => (
-  <Container height="100vh">
-     <div>
-       <h1>this is index page</h1>
-     </div>  
-  </Container>
+     <Box>
+        <NavBar/>
+        <h2>Welcome to reddit clone</h2>
+     </Box>
 )
 
 export default Index;
