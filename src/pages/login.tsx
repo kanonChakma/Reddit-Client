@@ -29,11 +29,6 @@ const Login: React.FC<{}> = ({}) => {
                 }
             >
                 {({
-                values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
                 handleSubmit,
                 isSubmitting,
                 /* and other goodies */
