@@ -1,10 +1,10 @@
-mutation Login($options: UsernamePasswordInput!){
-  login(options: $options){
-    error{
+mutation Login($usernameOrEmail: String!, $password: String!) {
+  login(usernameOrEmail: $usernameOrEmail, password: $password) {
+    error {
       message
       field
     }
-    user{
+    user {
        ...RegularUser
     }
   }

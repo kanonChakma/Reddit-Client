@@ -1,19 +1,27 @@
-import { Box } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import { NavBar } from "../components/NavBar";
 import { usePostsQuery } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 
 const Index = () =>{
+   // const [showChild, setShowChild] = useState(false);
+   // useEffect(() => setShowChild(true), []);
+   // if(!showChild){
+   //    return null;
+   // }
    const [{data}] = usePostsQuery();
    return (
-      <Box>
-      <NavBar/>
-      <h2>Welcome to reddit clone</h2>
-      <br></br>
-      {!data?null:data.posts.map((data) => <h1 key={data.id}>{data.title}</h1>)}
-   </Box>
-   )
-}
+      <div>
+       <NavBar/>
+        <header>Home Page</header>
+       <br />
 
-export default withUrqlClient(createUrqlClient)(Index)
+       {!data?(
+         null
+         ):(data.posts.map((p) => <h5 key={p.id}>{p.title}</h5>)
+       )}
+    </div>
+   );
+};
+
+export default withUrqlClient(createUrqlClient, {ssr: true})(Index)

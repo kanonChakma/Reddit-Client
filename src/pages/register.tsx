@@ -1,10 +1,12 @@
 import { Box, Button, Text } from '@chakra-ui/react';
 import { Formik } from 'formik';
+import { withUrqlClient } from 'next-urql';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { InputField } from '../components/InputField';
 import { Wrapper } from '../components/Wrapper';
 import { useRegisterMutation } from '../generated/graphql';
+import { createUrqlClient } from '../utils/createUrqlClient';
 import { toErrorMap } from '../utils/toErrorMap';
 
 interface registerProps {
@@ -20,9 +22,10 @@ const Register: React.FC<registerProps> = ({}) => {
                    Register Your Account
                 </Text>
                <Formik
-                initialValues={{ username: "", password: "" }}
+                initialValues={{ username: "",email: "", password: "" }}
+               
                 onSubmit= { async (values, { setErrors}) => {
-                   const response = await register(values)
+                   const response = await register({options: values})
                   if(response.data?.register.error){
                       setErrors(toErrorMap(response.data.register.error))
                     }
@@ -52,6 +55,14 @@ const Register: React.FC<registerProps> = ({}) => {
                       name='password'
                       label='Enter Your Password:'
                     />
+                    <Box mt={3}>
+                    </Box>
+                    <InputField
+                      type='email'
+                      placeholder='email'
+                      name='email'
+                      label='Enter Your email:'
+                    />
                      <Box mt={3}>
                     </Box>
                     <Button
@@ -69,4 +80,4 @@ const Register: React.FC<registerProps> = ({}) => {
         );
 }
 
-export default Register;
+export default withUrqlClient(createUrqlClient)(Register);

@@ -1,11 +1,16 @@
 import { Box, Button, Flex } from '@chakra-ui/react';
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLogoutMutation, useMeQuery } from '../generated/graphql';
 
 export const NavBar: React.FC<{}> = ({}) => {
-      const[{fetching:logoutFetching},logout] = useLogoutMutation()
-      const [{data, fetching}] = useMeQuery()
+     const [isServer, setIsServer] = useState(true);
+     useEffect(() => setIsServer(false), []);
+     
+     const[{fetching:logoutFetching},logout] = useLogoutMutation()
+      const [{data, fetching}] = useMeQuery({
+        pause: isServer
+      })
       let body=null; 
       if(fetching){
          body=null;

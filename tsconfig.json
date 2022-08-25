@@ -30,7 +30,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "../Reddit-server/sleep.ts"  ],
   "exclude": [
     "node_modules"
   ]
