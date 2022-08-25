@@ -26,6 +26,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createPost: Post;
   deletePost: Scalars['Boolean'];
+  forgotPassword: Scalars['Boolean'];
   login: UserResponse;
   logout: Scalars['Boolean'];
   register: UserResponse;
@@ -43,8 +44,14 @@ export type MutationDeletePostArgs = {
 };
 
 
+export type MutationForgotPasswordArgs = {
+  email: Scalars['String'];
+};
+
+
 export type MutationLoginArgs = {
-  options: UsernamePasswordInput;
+  password: Scalars['String'];
+  usernameOrEmail: Scalars['String'];
 };
 
 
@@ -82,6 +89,7 @@ export type QueryPostArgs = {
 export type User = {
   __typename?: 'User';
   createdAt: Scalars['DateTime'];
+  email: Scalars['String'];
   id: Scalars['Float'];
   updatedAt: Scalars['DateTime'];
   username: Scalars['String'];
@@ -94,6 +102,7 @@ export type UserResponse = {
 };
 
 export type UsernamePasswordInput = {
+  email: Scalars['String'];
   password: Scalars['String'];
   username: Scalars['String'];
 };
@@ -101,7 +110,8 @@ export type UsernamePasswordInput = {
 export type RegularUserFragment = { __typename?: 'User', id: number, username: string, updatedAt: any };
 
 export type LoginMutationVariables = Exact<{
-  options: UsernamePasswordInput;
+  usernameOrEmail: Scalars['String'];
+  password: Scalars['String'];
 }>;
 
 
@@ -113,12 +123,11 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 
 export type RegisterMutationVariables = Exact<{
-  username: Scalars['String'];
-  password: Scalars['String'];
+  options: UsernamePasswordInput;
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', error?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: number, username: string, updatedAt: any } | null } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', error?: Array<{ __typename?: 'FieldError', message: string, field: string }> | null, user?: { __typename?: 'User', id: number, username: string, updatedAt: any } | null } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -138,8 +147,8 @@ export const RegularUserFragmentDoc = gql`
 }
     `;
 export const LoginDocument = gql`
-    mutation Login($options: UsernamePasswordInput!) {
-  login(options: $options) {
+    mutation Login($usernameOrEmail: String!, $password: String!) {
+  login(usernameOrEmail: $usernameOrEmail, password: $password) {
     error {
       message
       field
@@ -164,11 +173,11 @@ export function useLogoutMutation() {
   return Urql.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument);
 };
 export const RegisterDocument = gql`
-    mutation Register($username: String!, $password: String!) {
-  register(options: {username: $username, password: $password}) {
+    mutation Register($options: UsernamePasswordInput!) {
+  register(options: $options) {
     error {
-      field
       message
+      field
     }
     user {
       ...RegularUser
