@@ -16,7 +16,7 @@ export const createUrqlClient =(ssrExchange: any) =>({
                   cache,
                   {query: MeDocument},
                   result,
-                  () => ({ me: null})
+                  () => ({ me: null as any})
                 )
             },
             login: (_result, _args, cache, _info) => {

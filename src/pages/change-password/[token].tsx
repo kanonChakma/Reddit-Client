@@ -1,13 +1,23 @@
 import { Box, Button, Text } from "@chakra-ui/react";
 import { Formik } from "formik";
 import { NextPage } from "next";
+import { withUrqlClient } from "next-urql";
+import { useRouter } from "next/router";
+import { useState } from "react";
 import { InputField } from "../../components/InputField";
 import { Wrapper } from "../../components/Wrapper";
+import { useChangePasswordMutation } from "../../generated/graphql";
+import { createUrqlClient } from "../../utils/createUrqlClient";
+import { toErrorMap } from "../../utils/toErrorMap";
 interface props {
     token :string
 }
 
 const ChangePassword: NextPage<props> = ({token}) => {
+    const [,changePassword] = useChangePasswordMutation()
+    const router = useRouter();
+    const [tokenError, setTokenError] = useState("");
+    
     return (
         <div>
            <Wrapper variant='small'>
@@ -17,16 +27,21 @@ const ChangePassword: NextPage<props> = ({token}) => {
                <Formik
                 initialValues={{ newPassword: "" }}
                 onSubmit= { async (values, { setErrors}) => {
-                //    const response = await login({usernameOrEmail: values.usernameOrEmail, password: values.password})
-                //   if(response.data?.login.error){
-                //       setErrors(toErrorMap(response.data.login.error))
-                //     }
-                //    else if(response.data?.login.user){
-                //     router.push("/");
-                //     }   
-                  }
+
+                    const response = await changePassword({newPassword: values.newPassword, token:token})
+                    if(response.data?.changePassword.error){
+                        const errorMap = toErrorMap(response.data.changePassword.error);
+                        if('token' in errorMap){
+                          setTokenError(errorMap.token); 
+                        }
+                        setErrors(errorMap);
+                     }
+                   else if(response.data?.changePassword.user){
+                    router.push("/");
+                     }   
+                   }
                 }
-            >
+             >
                 {({
                 handleSubmit,
                 isSubmitting,
@@ -34,12 +49,12 @@ const ChangePassword: NextPage<props> = ({token}) => {
                 }) => (
                 <form onSubmit={handleSubmit}>
                     <InputField
-                     name='newPassoword'
+                     name='newPassword'
                      placeholder='Enter New Password'
                      label='change password'
                      type='password'
                     />
-                   
+                      {tokenError?<Box style={{color: "red"}}>Token Expired</Box>:null}
                    <Box mt={3}>
                    </Box>
 
@@ -65,4 +80,4 @@ ChangePassword.getInitialProps = ({query}) => {
   };
 };
 
-export default ChangePassword;
+export default withUrqlClient(createUrqlClient)(ChangePassword);
