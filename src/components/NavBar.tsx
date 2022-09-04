@@ -37,16 +37,16 @@ export const NavBar: React.FC<{}> = ({}) => {
          <Flex>
             <Box mr={5}>{data.me.username}</Box>
             <Button 
-            isLoading={logoutFetching} 
-            onClick={() => logout()} 
+             isLoading={logoutFetching} 
+             onClick={() => logout()} 
             variant="link">
-              Logout
+               Logout
             </Button>
          </Flex>
        )
       }
       return (
-         <Flex bg="tomato" p={3}>
+         <Flex zIndex={2} position="sticky" top={0} bg="tomato" p={3}>
             <Box ml="auto">
                 {body}
             </Box>

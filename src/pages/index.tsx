@@ -1,5 +1,6 @@
 import { withUrqlClient } from "next-urql";
-import { NavBar } from "../components/NavBar";
+import Link from "next/link";
+import { LayOut } from "../components/LayOut";
 import { usePostsQuery } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 
@@ -10,18 +11,23 @@ const Index = () =>{
    //    return null;
    // }
    const [{data}] = usePostsQuery();
+   console.log(data);
    return (
-      <div>
-       <NavBar/>
+      <LayOut variant="small">
+      <span>
+         <Link href="/create-post">
+            Create a Post
+         </Link>
+      </span>
         <header>Home Page</header>
-       <br />
-
-       {!data?(
-         null
-         ):(data.posts.map((p) => <h5 key={p.id}>{p.title}</h5>)
-       )}
-    </div>
+        <div>
+          {!data?(
+            <div>Loading.....</div>
+            ):(data.posts.map((p) => <h5 key={p.id}>{p.title}</h5>)
+          )}
+        </div>
+      </LayOut>
    );
 };
 
-export default withUrqlClient(createUrqlClient, {ssr: true})(Index)
+export default withUrqlClient(createUrqlClient, {ssr: false})(Index)

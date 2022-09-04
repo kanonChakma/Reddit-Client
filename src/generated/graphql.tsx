@@ -42,6 +42,7 @@ export type MutationChangePasswordArgs = {
 
 
 export type MutationCreatePostArgs = {
+  text: Scalars['String'];
   title: Scalars['String'];
 };
 
@@ -68,14 +69,17 @@ export type MutationRegisterArgs = {
 
 
 export type MutationUpdatePostArgs = {
-  id: Scalars['Int'];
+  id: Scalars['Float'];
   title?: InputMaybe<Scalars['String']>;
 };
 
 export type Post = {
   __typename?: 'Post';
   createdAt: Scalars['DateTime'];
+  creatorId: Scalars['Float'];
   id: Scalars['Float'];
+  points: Scalars['Float'];
+  text: Scalars['String'];
   title: Scalars['String'];
   updatedAt: Scalars['DateTime'];
 };
@@ -95,10 +99,10 @@ export type QueryPostArgs = {
 
 export type User = {
   __typename?: 'User';
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['String'];
   email: Scalars['String'];
   id: Scalars['Float'];
-  updatedAt: Scalars['DateTime'];
+  updatedAt: Scalars['String'];
   username: Scalars['String'];
 };
 
@@ -116,9 +120,9 @@ export type UsernamePasswordInput = {
 
 export type RegularErrorFragment = { __typename?: 'FieldError', message: string, field: string };
 
-export type RegularUserFragment = { __typename?: 'User', id: number, username: string, updatedAt: any };
+export type RegularUserFragment = { __typename?: 'User', id: number, username: string, updatedAt: string };
 
-export type RegularUserResponseFragment = { __typename?: 'UserResponse', error?: Array<{ __typename?: 'FieldError', message: string, field: string }> | null, user?: { __typename?: 'User', id: number, username: string, updatedAt: any } | null };
+export type RegularUserResponseFragment = { __typename?: 'UserResponse', error?: Array<{ __typename?: 'FieldError', message: string, field: string }> | null, user?: { __typename?: 'User', id: number, username: string, updatedAt: string } | null };
 
 export type ChangePasswordMutationVariables = Exact<{
   token: Scalars['String'];
@@ -126,7 +130,15 @@ export type ChangePasswordMutationVariables = Exact<{
 }>;
 
 
-export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'UserResponse', error?: Array<{ __typename?: 'FieldError', message: string, field: string }> | null, user?: { __typename?: 'User', id: number, username: string, updatedAt: any } | null } };
+export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'UserResponse', error?: Array<{ __typename?: 'FieldError', message: string, field: string }> | null, user?: { __typename?: 'User', id: number, username: string, updatedAt: string } | null } };
+
+export type CreatePostMutationVariables = Exact<{
+  title: Scalars['String'];
+  text: Scalars['String'];
+}>;
+
+
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: number, createdAt: any, updatedAt: any, text: string, title: string, points: number, creatorId: number } };
 
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
@@ -141,7 +153,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', error?: Array<{ __typename?: 'FieldError', message: string, field: string }> | null, user?: { __typename?: 'User', id: number, username: string, updatedAt: any } | null } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', error?: Array<{ __typename?: 'FieldError', message: string, field: string }> | null, user?: { __typename?: 'User', id: number, username: string, updatedAt: string } | null } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -153,12 +165,12 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', error?: Array<{ __typename?: 'FieldError', message: string, field: string }> | null, user?: { __typename?: 'User', id: number, username: string, updatedAt: any } | null } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', error?: Array<{ __typename?: 'FieldError', message: string, field: string }> | null, user?: { __typename?: 'User', id: number, username: string, updatedAt: string } | null } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: number, createdAt: any, updatedAt: any, username: string } };
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: number, createdAt: string, updatedAt: string, username: string } };
 
 export type PostsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -199,6 +211,23 @@ export const ChangePasswordDocument = gql`
 
 export function useChangePasswordMutation() {
   return Urql.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument);
+};
+export const CreatePostDocument = gql`
+    mutation CreatePost($title: String!, $text: String!) {
+  createPost(title: $title, text: $text) {
+    id
+    createdAt
+    updatedAt
+    text
+    title
+    points
+    creatorId
+  }
+}
+    `;
+
+export function useCreatePostMutation() {
+  return Urql.useMutation<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument);
 };
 export const ForgotPasswordDocument = gql`
     mutation ForgotPassword($email: String!) {
