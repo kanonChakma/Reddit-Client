@@ -10,7 +10,11 @@ const Index = () =>{
    // if(!showChild){
    //    return null;
    // }
-   const [{data}] = usePostsQuery();
+   const [{data}] = usePostsQuery({
+      variables:{
+         limit: 10
+      }
+   });
    console.log(data);
    return (
       <LayOut variant="small">
