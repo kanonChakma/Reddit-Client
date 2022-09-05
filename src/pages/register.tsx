@@ -14,8 +14,8 @@ interface registerProps {
 }
 
 const Register: React.FC<registerProps> = ({}) => {
-    const [, register] = useRegisterMutation();
     const router =  useRouter();
+    const [, register] = useRegisterMutation();
         return (
             <Wrapper variant='small'>
                 <Text mb={8} textAlign="center" fontSize='20px' color='tomato'>
